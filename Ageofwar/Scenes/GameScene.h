@@ -3,7 +3,7 @@
 
 class TextGo;
 
-class SceneDev1 : public Scene
+class GameScene : public Scene
 {
 protected:
 	enum class CollisionMode
@@ -23,8 +23,8 @@ protected:
 	bool isColliding = false;
 
 public:
-	SceneDev1();
-	~SceneDev1() override;
+	GameScene();
+	~GameScene() override;
 
 	void Init() override;
 	void Enter() override;

@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "SceneDev1.h"
+#include "GameScene.h"
 #include "TextGo.h"
 #include "Framework.h"
 #include "ResourceMgr.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
 
-SceneDev1::SceneDev1() : Scene(SceneIds::Dev1), rect1(nullptr), rect2(nullptr), 
-	circle1(nullptr), circle2(nullptr), collisionText(nullptr), modeText(nullptr)
+GameScene::GameScene() : Scene(SceneIds::GameScene),
+rect1(nullptr), rect2(nullptr),	circle1(nullptr), circle2(nullptr), collisionText(nullptr), modeText(nullptr)
 {
 }
 
-SceneDev1::~SceneDev1()
+GameScene::~GameScene()
 {
 	delete rect1;
 	delete rect2;
@@ -19,7 +19,7 @@ SceneDev1::~SceneDev1()
 	delete circle2;
 }
 
-void SceneDev1::Init()
+void GameScene::Init()
 {
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 
@@ -80,7 +80,7 @@ void SceneDev1::Init()
 	Scene::Init();
 }
 
-void SceneDev1::Enter()
+void GameScene::Enter()
 {
 	auto size = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
@@ -92,7 +92,7 @@ void SceneDev1::Enter()
 	Scene::Enter();
 }
 
-void SceneDev1::Update(float dt)
+void GameScene::Update(float dt)
 {
 	Scene::Update(dt);
 
@@ -189,7 +189,7 @@ void SceneDev1::Update(float dt)
 	}
 }
 
-void SceneDev1::Draw(sf::RenderWindow& window)
+void GameScene::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 	
