@@ -8,11 +8,9 @@ class GameScene : public Scene
 protected:
 	sf::Sprite background;
 	
+	sf::Sprite cursor;
+	
 
-	
-	TextGo* collisionText;
-	TextGo* modeText;
-	
 
 	
 

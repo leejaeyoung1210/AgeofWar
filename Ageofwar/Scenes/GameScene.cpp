@@ -17,7 +17,7 @@ void GameScene::Init()
 	//uiView.setSize(1280.f, 720.f);
 
 	texIds.push_back("graphics/background.png");
-	fontIds.push_back("fonts/DS-DIGIT.ttf");
+	//fontIds.push_back("fonts/DS-DIGIT.ttf");
 
 
 	Scene::Init();
@@ -32,8 +32,10 @@ void GameScene::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(center);*/
 
-	background.setTexture(TEXTURE_MGR.Get("graphics/background.png"));
+	
 	Scene::Enter();
+
+	background.setTexture(TEXTURE_MGR.Get("graphics/background.png"));
 }
 
 void GameScene::Update(float dt)
