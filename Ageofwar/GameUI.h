@@ -13,8 +13,10 @@ protected:
 
 	sf::Sprite goldIcon;
 	sf::RectangleShape hpBar;
+	sf::RectangleShape hpBar2;
+	sf::RectangleShape unitBar;
 
-	
+	std::string goldTexId = "graphics/coin.png";
 	std::string fontId = "fonts/DS-DIGIT.ttf";
 
 	const float BAR_SIZE = 10.f;
@@ -35,8 +37,9 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void UpdateGoldMessage(int count);
-	void UpdatehpBarMessage(int h);
 	void UpdateExpMessage(int count);
+	void UpdatehpBarMessage(int h);
 	void UpdateHpBar(int maxHp, int hp);
-	//void UpdateSkillMessage(int );
+	void UpdateHpBar2(int maxHp2, int hp2);
+	
 };
