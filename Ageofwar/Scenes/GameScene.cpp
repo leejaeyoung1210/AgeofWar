@@ -38,9 +38,13 @@ void GameScene::Init()
 		Player2* player2 = (Player2*)AddGameObject(new Player2());
 		player2->SetActive(false);
 		player2Pool.push_back(player2);
+
+		Player* player = (Player*)AddGameObject(new Player());
+		player->SetActive(false);
+		playerPool.push_back(player);
 	}
 
-	
+
 	Scene::Init();
 }
 
@@ -48,7 +52,7 @@ void GameScene::Enter()
 {
 	Scene::Enter();
 
-	
+
 	sf::FloatRect windowbound = FRAMEWORK.GetWindowBounds();
 	auto size = FRAMEWORK.GetWindowSizeF();
 	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
@@ -83,13 +87,21 @@ void GameScene::Exit()
 {
 	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 
-	for (Player2* player2 : player2List)
+	for (Unit* unit : allUnits)
 	{
-		player2->SetActive(false);
-		player2Pool.push_back(player2);
+		unit->SetActive(false);
+
+		if (auto p2 = dynamic_cast<Player2*>(unit))
+		{
+			player2Pool.push_back(p2);
+		}
+		else if (auto p1 = dynamic_cast<Player*>(unit))
+		{
+			playerPool.push_back(p1);
+		}
 	}
-	player2List.clear();
-	
+	allUnits.clear();
+
 	Scene::Exit();
 }
 
@@ -100,49 +112,65 @@ void GameScene::Update(float dt)
 	// 마우스 위치 가져오기
 	sf::Vector2i screenPos = InputMgr::GetMousePosition();
 	sf::Vector2f mousePos(static_cast<float>(screenPos.x), static_cast<float>(screenPos.y));
-	//dt 조건식 가져오기
-	//SpawnPlayer2(10);
-
-
-
-	auto it =  player2List.begin();
-	while (it != player2List.end())
+	
+	auto it = allUnits.begin();
+	while (it != allUnits.end())
 	{
 		if (!(*it)->GetActive())
 		{
-			player2Pool.push_back(*it);
-			it = player2List.erase(it);			
+			if (auto p1 = dynamic_cast<Player*>(*it))
+				playerPool.push_back(p1);
+			else if (auto p2 = dynamic_cast<Player2*>(*it))
+				player2Pool.push_back(p2);
+			/*else if (auto turret = dynamic_cast<Turret*>(*it))
+				turretPool.push_back(turret);*/
 			
+			it = allUnits.erase(it);		
 		}
 		else
 		{
 			++it;
 		}
 	}
+		
 
 	spawntimer += dt;
-	if (spawntimer >= spawncool)
-	{		
-		for (int i = 0; i < 11; i++)
-		{			
-			SpawnPlayer2(1);
-		}
-		spawntimer = 0;
-	}
+	wavetimer += dt;
 
-	for (auto p2 : player2List)
+	if (wavecool > wavetimer)
 	{
-		if (p2->GetActive())
-			p2->Update(dt);
+		if (spawntimer >= spawncool)
+		{
+			SpawnPlayer2(1);	
+			SpawnPlayer(1);
+			spawntimer = 0.f;
+		}
+	}
+	else
+	{
+		waveDelayTimer += dt;
+		if (waveDelayTimer > someDelayTime)
+		{
+			wavetimer = 0.f;
+			spawntimer = 0.f;
+			waveDelayTimer = 0.f;
+		}
 	}
 
 
+	for (auto pl : allUnits)
+	{
+		if (pl->GetActive())
+			pl->Update(dt);
+	}
+
+	
 }
 
 void GameScene::Draw(sf::RenderWindow& window)
 {
 	window.draw(background);
-	
+
 	for (auto go : gameObjects)
 	{
 		if (go->GetActive())
@@ -154,9 +182,9 @@ void GameScene::Draw(sf::RenderWindow& window)
 }
 
 void GameScene::SpawnPlayer2(int count)
-{	
+{
 	for (int i = 0; i < count; ++i)
-	{	
+	{
 
 		if (player2Pool.empty())
 		{
@@ -171,11 +199,39 @@ void GameScene::SpawnPlayer2(int count)
 		}
 		player2->SetType((Player2::Types)Utils::RandomRange(0, Player2::TotalTypes));
 		player2->Reset();
-		player2->SetPosition({ 500.f, 630.f });		
+		player2->SetPosition({ 700.f, 630.f });
 		player2->SetTeam(Unit::Team::Team2);
-		player2List.push_back(player2);
-		
+		allUnits.push_back(player2);
+
 	}
 }
+
+void GameScene::SpawnPlayer(int count)
+{
+	for (int i = 0; i < count; ++i)
+	{
+
+		if (playerPool.empty())
+		{
+			player = (Player*)AddGameObject(new Player());
+			player->Init();
+		}
+		else
+		{
+			player = playerPool.front();
+			playerPool.pop_front();
+			player->SetActive(true);
+		}
+		player->SetType((Player::Types)Utils::RandomRange(0, Player::TotalTypes));
+		player->Reset();
+		player->SetPosition({ 300.f, 630.f });
+		player->SetTeam(Unit::Team::Team1);
+		allUnits.push_back(player);
+
+	}
+}
+
+
+
 
 

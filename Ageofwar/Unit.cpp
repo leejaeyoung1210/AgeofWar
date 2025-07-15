@@ -60,66 +60,89 @@ void Unit::Reset()
 
 	hp = maxHp;
 	attackTimer = 0.f;
+	speed = originalSpeed;
 }
 
 void Unit::Update(float dt)
 {
-	hitBox.UpdateTransform(body, GetLocalBounds());
-
-	SetPosition(GetPosition() + direction * speed * dt);
+	hitBox.UpdateTransform(body, GetLocalBounds());	
 
 	if (type == Types::range)
 	{
 		rangehitBox.UpdateTransform(body, GetLocalBounds());
-	}	
+	}
+
+	SetPosition(GetPosition() + direction * speed * dt);
+
 	attackTimer += dt;
+
 	bool inAttackRange = false;
+	bool isColliding = false;
 
-	if (attackTimer > attackInterval)
+	const auto& allUnits = gameScene->GetAllUnits();
+
+	for (auto* target : allUnits)
 	{
-		const auto& allUnits = gameScene->GetAllUnits();
-
-		for (auto* target : allUnits)
+		if (!target || !target->IsAlive() || target == this)
+			continue;
+		
+		if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
 		{
-			if (!target || !target->IsAlive())
-				continue;
-			if (target == this)
-				continue;
+			isColliding = true;
+
+			// 같은 팀이면 공격은 하지 않음, 충돌만 감지
 			if (target->GetTeam() == this->GetTeam())
 			{
-				if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
+				sf::Vector2f toTarget = target->GetPosition() - position;
+				float dot = direction.x * toTarget.x + direction.y * toTarget.y;
+
+				if (dot > 0) // 내 앞에 있으면 멈춤
 				{
 					speed = 0.f;
-					attackTimer = 0.f;
 					inAttackRange = true;
 					break;
 				}
+				else
+				{
+					// 내 뒤에 있으면 움직임 유지
+					speed = originalSpeed;
+					continue;
+				}
 			}
-
-			if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
+			else
 			{
-				std::cout << "충돌 발생!\n";
-				speed = 0.f;
-				attackTimer = 0.f;
-				target->OnDamage(damage);
 				inAttackRange = true;
+				speed = 0.f;
+								
+				if (attackTimer > attackInterval)
+				{
+					attackTimer = 0.f;
+					
+					target->OnDamage(damage);
+				}
 				break;
 			}
-			else if (type == Types::range &&
-				Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+		}
+		else if (type == Types::range &&
+			Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+		{
+			if (target->GetTeam() != this->GetTeam())
 			{
-				attackTimer = 0.f;
-				target->OnDamage(damage);				
-				break;
+				if (attackTimer > attackInterval)
+				{
+					attackTimer = 0.f;
+					target->OnDamage(damage);
+				}
 			}
 		}
 	}
 
-	if (!inAttackRange)
+	if (!isColliding)
 	{
+		inAttackRange = false;
 		speed = originalSpeed;
 	}
-	
+
 }
 void Unit::Draw(sf::RenderWindow& window)
 {
@@ -132,10 +155,10 @@ void Unit::SetType(Types type)
 {
 	this->type = type;
 	switch (this->type)
-	{	
+	{
 	case Types::melee:
 		texId = "graphics/cave_melee_walk0001.png";
-		maxHp = 150;		
+		maxHp = 150;
 		speed = originalSpeed;
 		damage = 20;
 		attackInterval = 1.f;
@@ -161,8 +184,11 @@ void Unit::OnDamage(int damage)
 {
 	hp = Utils::Clamp(hp - damage, 0, maxHp);
 	if (hp == 0)
+		std::cout << GetName() << " 데미지: " << damage << ", 현재 체력: " << hp << std::endl;
 	{
 		SetActive(false);
+		std::cout << GetName() << "가 죽었습니다." << std::endl;
+		
 	}
 
 }

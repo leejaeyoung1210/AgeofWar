@@ -22,13 +22,19 @@ protected:
 	Base* base = nullptr;
 	Base* base2 = nullptr;
 
-	std::vector<Unit*> allUnits;
-	std::list<Player2*> player2List;
+	std::list<Unit*> allUnits;
+	
+	std::list<Player*> playerPool;	
 	std::list<Player2*> player2Pool;
 
-	float spawncool = 10.f;	
+	float spawncool = 1.f;	
 	float spawntimer = 0.f;
 
+	float wavecool = 6.f;
+	float wavetimer = 0.f;	
+
+	float someDelayTime = 7.f;
+	float waveDelayTimer = 0.f;
 	
 public:
 	static int Gold;
@@ -43,7 +49,9 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SpawnPlayer2(int count);
-	const std::vector<Unit*>& GetAllUnits() const { return allUnits; }
+	void SpawnPlayer(int count);
+	const std::list<Unit*>& GetAllUnits() const { return allUnits; }
 	
+
 };
 

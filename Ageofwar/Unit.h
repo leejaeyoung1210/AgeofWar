@@ -71,6 +71,9 @@ public:
 	void SetTeam(Team t) { team = t; }
 	Team GetTeam() const { return team; }
 
+	sf::Vector2f GetDirection() const { return direction; }
+	float GetSpeed() const { return speed; }
+	
 	
 
 	void SetType(Types type);
