@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Unit.h"
-
+#include "Player.h"
+#include "Player2.h"
 
 Unit::Unit(const std::string& name)
 	: GameObject(name)
@@ -38,6 +39,7 @@ void Unit::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
+	rangehitBox.sizeplus = { 250.f,0.f };
 
 	SetType(type);
 }
@@ -63,14 +65,17 @@ void Unit::Update(float dt)
 {
 
 	SetPosition(GetPosition() + direction * speed * dt);
-	hitBox.UpdateTransform(body, GetLocalBounds());
+	hitBox.UpdateTransform(body, GetLocalBounds());	
 
+	if (type == Types::range)
+	{
+		rangehitBox.UpdateTransform(body, GetLocalBounds());
+	}
 	if (!target || !target->IsAlive())
 	{
-		SetType(type);  
-		attackTimer = 0.f;  	
+		SetType(type);
+		attackTimer = 0.f;
 	}
-
 	attackTimer += dt;
 	if (attackTimer > attackInterval)
 	{
@@ -79,6 +84,13 @@ void Unit::Update(float dt)
 			speed = 0.f;
 			attackTimer = 0.f;
 			target->OnDamage(damage);
+			
+		}
+		if (Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+		{
+			speed = 0.f;
+			attackTimer = 0.f;
+			target->OnDamage(damage);			
 		}
 	}
 }
@@ -87,6 +99,7 @@ void Unit::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	hitBox.Draw(window);
+	rangehitBox.Draw(window);
 }
 
 void Unit::SetType(Types type)
@@ -96,21 +109,21 @@ void Unit::SetType(Types type)
 	{
 	case Types::melee:
 		texId = "graphics/cave_melee_walk0001.png";
-		maxHp = 100;
+		maxHp = 150;
 		speed = 50.f;
 		damage = 20;
 		attackInterval = 1.f;
 		break;
 	case Types::range:
 		texId = "graphics/cave_range_walk0001.png";
-		maxHp = 250;
+		maxHp = 100;
 		speed = 50.f;
 		damage = 40;
-		attackInterval = 1.f;
+		attackInterval = 1.f;		
 		break;
 	case Types::tank:
 		texId = "graphics/cave_tank_walk0001.png";
-		maxHp = 150;
+		maxHp = 200;
 		speed = 50.f;
 		damage = 60;
 		attackInterval = 1.3f;
@@ -125,4 +138,5 @@ void Unit::OnDamage(int damage)
 	{
 		SetActive(false);
 	}
+
 }

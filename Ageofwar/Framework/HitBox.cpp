@@ -10,7 +10,7 @@ HitBox::HitBox()
 
 void HitBox::UpdateTransform(const sf::Transformable& tr, const sf::FloatRect& localBounds)
 {
-	rect.setSize({ localBounds.width, localBounds.height });
+	rect.setSize({ localBounds.width + sizeplus.x, localBounds.height });
 	rect.setOutlineColor(sf::Color::Green);
 	rect.setOrigin(tr.getOrigin());
 	rect.setPosition(tr.getPosition());

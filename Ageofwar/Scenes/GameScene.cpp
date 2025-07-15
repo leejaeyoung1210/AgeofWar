@@ -56,15 +56,8 @@ void GameScene::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(center);
 
-
 	background.setTexture(TEXTURE_MGR.Get("graphics/background.png"));
-	base.setTexture(TEXTURE_MGR.Get("graphics/base.png"));
-	base.setPosition(windowbound.left - 100.f, 430.f);
-	base.setScale(0.4f, 0.4f);
-
-	base2.setTexture(TEXTURE_MGR.Get("graphics/base.png"));
-	base2.setPosition(windowbound.width + 100.f, 430.f);
-	base2.setScale(0.4f, 0.4f);
+	background.setPosition(0.f, 0.f);
 
 
 
@@ -79,18 +72,30 @@ void GameScene::Update(float dt)
 	sf::Vector2i screenPos = InputMgr::GetMousePosition();
 	sf::Vector2f mousePos(static_cast<float>(screenPos.x), static_cast<float>(screenPos.y));
 
+	base = (Base*)AddGameObject(new Base());
+	base->Init();
+	base->Reset();
+	base->SetPosition({ 100.f, 570.f });
+	base->SetActive(true);
+
+	base2 = (Base*)AddGameObject(new Base());
+	base2->Init();
+	base2->Reset();
+	base2->SetPosition({ -1000.f, 570.f });
+	base2->SetActive(true);
+
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && unitList.empty())
 	{
-		Player* player = (Player*)AddGameObject(new Player());
+		player = (Player*)AddGameObject(new Player());
 		player->SetType(Unit::Types::melee);
 		player->Init();
 		player->Reset();		
-		player->SetPosition({ 100.f, 630.f });
+		player->SetPosition({ 300.f, 630.f }); 
 		player->SetActive(true);
 
-		Player2* player2 = (Player2*)AddGameObject(new Player2());
-		player2->SetType(Unit::Types::melee);
+		player2 = (Player2*)AddGameObject(new Player2());
+		player2->SetType(Unit::Types::tank);
 		player2->Init();
 		player2->Reset();
 		player2->SetScale({ -0.4, 0.4f });
@@ -101,27 +106,33 @@ void GameScene::Update(float dt)
 		player2->SetTarget(player);
 
 		unitList.push_back(player);
-		unitList.push_back(player2);
+		unitList.push_back(player2);		
 	}
 
+
+	
 	for (auto unit : unitList)
 	{
 		if (unit->GetActive())
 			unit->Update(dt);
 	}
-
+	
 
 }
 
 void GameScene::Draw(sf::RenderWindow& window)
 {
 	window.draw(background);
-	window.draw(base);
-	window.draw(base2);
 	for (auto unit : unitList)
 	{
 		if (unit->GetActive())
 			unit->Draw(window);
+	}
+
+	for (auto go : gameObjects)
+	{
+		if (go->GetActive())
+			go->Draw(window);
 	}
 
 	Scene::Draw(window);

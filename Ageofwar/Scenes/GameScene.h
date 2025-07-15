@@ -1,5 +1,7 @@
 #pragma once
 #include "Scene.h"
+#include "Unit.h"
+#include "Base.h"
 
 
 class TextGo;
@@ -11,11 +13,12 @@ protected:
 	sf::Sprite background;
 	
 	sf::Sprite cursor;
-	sf::Sprite base;
-	sf::Sprite base2;
-	
+		
 	Unit* player = nullptr;  
 	Unit* player2 = nullptr;
+	
+	Base* base = nullptr;
+	Base* base2 = nullptr;
 
 	std::list<Unit*> unitList;
 	std::list<Unit*> unitPool;

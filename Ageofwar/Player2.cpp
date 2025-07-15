@@ -28,6 +28,7 @@ void Player2::Reset()
 void Player2::Update(float dt)
 {
 	Unit::Update(dt);
+	std::cout << "Player HP: " << this->GetHp() << std::endl;
 }
 
 void Player2::Draw(sf::RenderWindow& window)
