@@ -3,6 +3,7 @@
 #include "Unit.h"
 #include "Base.h"
 #include "Player2.h"
+#include "Player.h"
 
 
 class TextGo;
@@ -15,17 +16,18 @@ protected:
 	
 	sf::Sprite cursor;
 		
-	Player2* player = nullptr;
+	Player* player = nullptr;
 	Player2* player2 = nullptr;
 	
-	Unit* base = nullptr;
-	Unit* base2 = nullptr;
+	Base* base = nullptr;
+	Base* base2 = nullptr;
 
-	std::list<Unit*> unitList;
-	std::list<Unit*> unitPool;
-
+	std::vector<Unit*> allUnits;
 	std::list<Player2*> player2List;
 	std::list<Player2*> player2Pool;
+
+	float spawncool = 10.f;	
+	float spawntimer = 0.f;
 
 	
 public:
@@ -41,7 +43,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SpawnPlayer2(int count);
-
+	const std::vector<Unit*>& GetAllUnits() const { return allUnits; }
 	
 };
 

@@ -26,8 +26,8 @@ void Player::Reset()
 
 void Player::Update(float dt)
 {
-
 	Unit::Update(dt);
+    
 }
 
 void Player::Draw(sf::RenderWindow& window)

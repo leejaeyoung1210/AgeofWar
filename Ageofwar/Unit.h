@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "HitBox.h"
 
+
 class GameScene;
 
 class Unit :    public GameObject
@@ -9,23 +10,30 @@ class Unit :    public GameObject
 
 public:
 	enum class Types
-	{
-		base,
+	{		
 		melee,
 		range,
 		tank,
+	};
+
+	enum class Team
+	{
+		None,
+		Team1,  
+		Team2,  
 	};
 
 	static const int TotalTypes = 3;
 
 protected:
 	Types type = Types::melee;
+	Team team = Team::None;
+	
 
 	sf::Sprite body;
 	std::string texId;
-	sf::Vector2f direction;
-
-	
+	sf::Vector2f direction={ 0.f,0.f };
+		
 
 	int maxHp = 0;
 	float speed = 0.f;
@@ -37,10 +45,10 @@ protected:
 	float attackTimer = 0.f;
 
 	GameScene* gameScene = nullptr;
-	Unit* target = nullptr;
-	std::vector<Unit*> targets;
+	
 	HitBox hitBox;
 	HitBox rangehitBox;
+	
 
 public:
 	bool IsAlive() const { return hp > 0; }
@@ -53,13 +61,17 @@ public:
 	void SetScale(const sf::Vector2f& s) override;
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;
-	void SetTarget(Unit* target) { this->target = target; };
+	
 
 	void Init() override;
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	void SetTeam(Team t) { team = t; }
+	Team GetTeam() const { return team; }
+
+	
 
 	void SetType(Types type);
 
@@ -81,6 +93,8 @@ public:
 	void OnDamage(int damage);
 	int GetHp() const { return hp; }
 	void SetHp(int hp) { this->hp = hp; }
+
+	
 	
 };
 

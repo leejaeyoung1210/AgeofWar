@@ -2,6 +2,7 @@
 #include "Unit.h"
 #include "Player.h"
 #include "Player2.h"
+#include "GameScene.h"
 
 Unit::Unit(const std::string& name)
 	: GameObject(name)
@@ -65,50 +66,60 @@ void Unit::Update(float dt)
 {
 	hitBox.UpdateTransform(body, GetLocalBounds());
 
-	if (type == Types::base)
-	{
-		return;
-	}
-
 	SetPosition(GetPosition() + direction * speed * dt);
 
 	if (type == Types::range)
 	{
 		rangehitBox.UpdateTransform(body, GetLocalBounds());
-	}
-	
+	}	
 	attackTimer += dt;
 	bool inAttackRange = false;
+
 	if (attackTimer > attackInterval)
 	{
-		
-			if (!target || !target->IsAlive())
-			{
-				return;
-			}
+		const auto& allUnits = gameScene->GetAllUnits();
 
+		for (auto* target : allUnits)
+		{
+			if (!target || !target->IsAlive())
+				continue;
+			if (target == this)
+				continue;
+			if (target->GetTeam() == this->GetTeam())
+			{
+				if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
+				{
+					speed = 0.f;
+					attackTimer = 0.f;
+					inAttackRange = true;
+					break;
+				}
+			}
 
 			if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
 			{
+				std::cout << "충돌 발생!\n";
 				speed = 0.f;
 				attackTimer = 0.f;
 				target->OnDamage(damage);
-				
-				return;
+				inAttackRange = true;
+				break;
 			}
-			if (Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
-			{				
+			else if (type == Types::range &&
+				Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+			{
 				attackTimer = 0.f;
-				target->OnDamage(damage);
-				return;
+				target->OnDamage(damage);				
+				break;
 			}
-
 		}
-	
+	}
+
 	if (!inAttackRange)
 	{
 		speed = originalSpeed;
 	}
+	
 }
 void Unit::Draw(sf::RenderWindow& window)
 {
@@ -121,13 +132,7 @@ void Unit::SetType(Types type)
 {
 	this->type = type;
 	switch (this->type)
-	{
-	case Types::base:
-		texId = "graphics/base.png";
-		maxHp = 500;
-		speed = 0.f;
-		originalSpeed = 0.f;
-		break;
+	{	
 	case Types::melee:
 		texId = "graphics/cave_melee_walk0001.png";
 		maxHp = 150;		

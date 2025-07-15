@@ -7,8 +7,8 @@ class GameScene;
 
 class Player :    public Unit
 {
-protected:  	 
-
+protected:  	 	
+	
 public:
     Player(const std::string& name ="");
     virtual ~Player() = default;
@@ -18,6 +18,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	
 		
 };
 

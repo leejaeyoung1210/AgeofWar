@@ -8,6 +8,8 @@ class GameScene;
 class Player2 : public Unit
 {
 protected:
+
+
 	
 public:
 	Player2(const std::string& name = "");
@@ -18,5 +20,6 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	
 
 };
