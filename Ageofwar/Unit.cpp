@@ -63,38 +63,53 @@ void Unit::Reset()
 
 void Unit::Update(float dt)
 {
+	hitBox.UpdateTransform(body, GetLocalBounds());
+
+	if (type == Types::base)
+	{
+		return;
+	}
 
 	SetPosition(GetPosition() + direction * speed * dt);
-	hitBox.UpdateTransform(body, GetLocalBounds());	
 
 	if (type == Types::range)
 	{
 		rangehitBox.UpdateTransform(body, GetLocalBounds());
 	}
-	if (!target || !target->IsAlive())
-	{
-		SetType(type);
-		attackTimer = 0.f;
-	}
+	
 	attackTimer += dt;
+	bool inAttackRange = false;
 	if (attackTimer > attackInterval)
 	{
-		if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
-		{
-			speed = 0.f;
-			attackTimer = 0.f;
-			target->OnDamage(damage);
-			
+		
+			if (!target || !target->IsAlive())
+			{
+				return;
+			}
+
+
+			if (Utils::CheckCollision(hitBox.rect, target->GetHitBox().rect))
+			{
+				speed = 0.f;
+				attackTimer = 0.f;
+				target->OnDamage(damage);
+				
+				return;
+			}
+			if (Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+			{				
+				attackTimer = 0.f;
+				target->OnDamage(damage);
+				return;
+			}
+
 		}
-		if (Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
-		{
-			speed = 0.f;
-			attackTimer = 0.f;
-			target->OnDamage(damage);			
-		}
+	
+	if (!inAttackRange)
+	{
+		speed = originalSpeed;
 	}
 }
-
 void Unit::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
@@ -107,24 +122,30 @@ void Unit::SetType(Types type)
 	this->type = type;
 	switch (this->type)
 	{
+	case Types::base:
+		texId = "graphics/base.png";
+		maxHp = 500;
+		speed = 0.f;
+		originalSpeed = 0.f;
+		break;
 	case Types::melee:
 		texId = "graphics/cave_melee_walk0001.png";
-		maxHp = 150;
-		speed = 50.f;
+		maxHp = 150;		
+		speed = originalSpeed;
 		damage = 20;
 		attackInterval = 1.f;
 		break;
 	case Types::range:
 		texId = "graphics/cave_range_walk0001.png";
 		maxHp = 100;
-		speed = 50.f;
+		speed = originalSpeed;
 		damage = 40;
-		attackInterval = 1.f;		
+		attackInterval = 1.f;
 		break;
 	case Types::tank:
 		texId = "graphics/cave_tank_walk0001.png";
 		maxHp = 200;
-		speed = 50.f;
+		speed = originalSpeed;
 		damage = 60;
 		attackInterval = 1.3f;
 		break;

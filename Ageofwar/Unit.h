@@ -10,6 +10,7 @@ class Unit :    public GameObject
 public:
 	enum class Types
 	{
+		base,
 		melee,
 		range,
 		tank,
@@ -30,13 +31,14 @@ protected:
 	float speed = 0.f;
 	int damage = 0;
 	float attackInterval = 0.3f;
+	float originalSpeed = 50.f;
 
 	int hp;
 	float attackTimer = 0.f;
 
 	GameScene* gameScene = nullptr;
 	Unit* target = nullptr;
-
+	std::vector<Unit*> targets;
 	HitBox hitBox;
 	HitBox rangehitBox;
 
@@ -79,5 +81,6 @@ public:
 	void OnDamage(int damage);
 	int GetHp() const { return hp; }
 	void SetHp(int hp) { this->hp = hp; }
+	
 };
 

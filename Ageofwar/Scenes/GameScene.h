@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Unit.h"
 #include "Base.h"
+#include "Player2.h"
 
 
 class TextGo;
@@ -14,15 +15,19 @@ protected:
 	
 	sf::Sprite cursor;
 		
-	Unit* player = nullptr;  
-	Unit* player2 = nullptr;
+	Player2* player = nullptr;
+	Player2* player2 = nullptr;
 	
-	Base* base = nullptr;
-	Base* base2 = nullptr;
+	Unit* base = nullptr;
+	Unit* base2 = nullptr;
 
 	std::list<Unit*> unitList;
 	std::list<Unit*> unitPool;
 
+	std::list<Player2*> player2List;
+	std::list<Player2*> player2Pool;
+
+	
 public:
 	static int Gold;
 	static int Exp;
@@ -31,9 +36,11 @@ public:
 
 	void Init() override;
 	void Enter() override;
-
+	void Exit() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SpawnPlayer2(int count);
 
 	
 };
