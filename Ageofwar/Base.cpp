@@ -16,13 +16,11 @@ void Base::Reset()
 	texId = "graphics/base.png";
 	maxHp = 500;
 	Unit::Reset();
-
 }
 
 void Base::Update(float dt)
 {
-	hitBox.UpdateTransform(body, GetLocalBounds());
-
+	Unit::Update(dt);
 }
 
 void Base::Draw(sf::RenderWindow& window)
