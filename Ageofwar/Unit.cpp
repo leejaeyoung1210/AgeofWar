@@ -75,8 +75,10 @@ void Unit::Update(float dt)
 	SetPosition(GetPosition() + direction * speed * dt);
 
 	attackTimer += dt;
+	//충돌여부확인용
+	
 
-	bool inAttackRange = false;
+
 	bool isColliding = false;
 
 	const auto& allUnits = gameScene->GetAllUnits();
@@ -99,7 +101,7 @@ void Unit::Update(float dt)
 				if (dot > 0) // 내 앞에 있으면 멈춤
 				{
 					speed = 0.f;
-					inAttackRange = true;
+					
 					break;
 				}
 				else
@@ -111,7 +113,7 @@ void Unit::Update(float dt)
 			}
 			else
 			{
-				inAttackRange = true;
+				
 				speed = 0.f;
 								
 				if (attackTimer > attackInterval)
@@ -139,7 +141,7 @@ void Unit::Update(float dt)
 
 	if (!isColliding)
 	{
-		inAttackRange = false;
+		
 		speed = originalSpeed;
 	}
 
