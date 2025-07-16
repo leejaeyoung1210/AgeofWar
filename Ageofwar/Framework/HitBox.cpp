@@ -3,14 +3,17 @@
 
 HitBox::HitBox()
 {
+	//채움
 	rect.setFillColor(sf::Color::Transparent);
+	//선색
 	rect.setOutlineColor(sf::Color::Green);
-	rect.setOutlineThickness(1.f);
+	//굵기
+	rect.setOutlineThickness(3.f);
 }
 
 void HitBox::UpdateTransform(const sf::Transformable& tr, const sf::FloatRect& localBounds)
 {
-	rect.setSize({ localBounds.width + sizeplus.x, localBounds.height });
+	rect.setSize({ localBounds.width + sizeplus.x, localBounds.height+ sizeplus.y });
 	rect.setOutlineColor(sf::Color::Green);
 	rect.setOrigin(tr.getOrigin());
 	rect.setPosition(tr.getPosition());

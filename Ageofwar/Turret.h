@@ -1,7 +1,9 @@
 #pragma once
-#include "HitBox.h"
+#include "CircleHitBox.h"
 #include"GameScene.h"
 #include "Unit.h"
+
+class Projectile;
 
 class Turret : public Unit
 {
@@ -16,16 +18,17 @@ public:
 
 protected:
 	Turretypes type = Turretypes::None;		
-
+	
+	
 	sf::Vector2f look;
 
-	//std::list<Bullet*> bulletList;
-	//std::list<Bullet*> bulletPool;
+	std::list<Projectile*> projectileList;
+	std::list<Projectile*> projectilePool;
 
 	
 	bool isSpawn = false;
 		
-	HitBox turrethitBox;
+	CircleHitBox turrethitBox;
 
 public:
 	Turret(const std::string& name = "");
@@ -43,8 +46,28 @@ public:
 
 	void Draw(sf::RenderWindow& window) override;
 		
+	Turretypes GetType()const { return type; };
 	void SetType(Turretypes type);
 
 	void Spawn(const sf::Vector2f& pos);
+
+	void Shoot();
+
+	sf::FloatRect GetLocalBounds() const override
+	{
+		return turrethitBox.circle.getLocalBounds();
+	}
+
+	sf::FloatRect GetGlobalBounds() const
+	{
+		return turrethitBox.circle.getGlobalBounds();
+	}
+
+	const CircleHitBox& GetcirleHitBox() const
+	{
+		return turrethitBox;
+	}
+
+
 
 };

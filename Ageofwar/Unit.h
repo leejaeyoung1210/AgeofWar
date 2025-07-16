@@ -54,6 +54,7 @@ public:
 
 	sf::Vector2f GetPosition() const { return position; }
 	void SetPosition(const sf::Vector2f& pos) override;
+	void SetRotation(float rot) override;
 	void SetScale(const sf::Vector2f& s) override;
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;

@@ -15,6 +15,12 @@ void Unit::SetPosition(const sf::Vector2f& pos)
 	body.setPosition(pos);
 }
 
+void Unit::SetRotation(float rot)
+{
+	GameObject::SetRotation(rot);
+	body.setRotation(rot);
+}
+
 void Unit::SetScale(const sf::Vector2f& s)
 {
 	GameObject::SetScale(s);

@@ -21,6 +21,7 @@ protected:
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
 	Turret* turret = nullptr;
+	Turret* turret2 = nullptr;
 	
 	Base* base = nullptr;
 	Base* base2 = nullptr;
