@@ -160,24 +160,24 @@ void Unit::SetType(Types type)
 	{
 	case Types::melee:
 		texId = "graphics/cave_melee_walk0001.png";
-		maxHp = 150;
+		maxHp = 2000;
 		speed = originalSpeed;
-		damage = 20;
-		attackInterval = 1.f;
+		damage = 15;
+		attackInterval = 3.f;
 		break;
 	case Types::range:
 		texId = "graphics/cave_range_walk0001.png";
-		maxHp = 100;
+		maxHp = 1000;
 		speed = originalSpeed;
-		damage = 40;
-		attackInterval = 1.f;
+		damage = 5;
+		attackInterval = 2.f;
 		break;
 	case Types::tank:
 		texId = "graphics/cave_tank_walk0001.png";
-		maxHp = 200;
+		maxHp = 3000;
 		speed = originalSpeed;
-		damage = 60;
-		attackInterval = 1.3f;
+		damage = 30;
+		attackInterval = 4.f;
 		break;
 	}
 }
@@ -185,8 +185,8 @@ void Unit::SetType(Types type)
 void Unit::OnDamage(int damage)
 {
 	hp = Utils::Clamp(hp - damage, 0, maxHp);
-	if (hp == 0)
-		std::cout << GetName() << " 데미지: " << damage << ", 현재 체력: " << hp << std::endl;
+	std::cout << GetName() << " 데미지: " << damage << ", 현재 체력: " << hp << std::endl;
+	if (hp == 0)	
 	{
 		SetActive(false);
 		std::cout << GetName() << "가 죽었습니다." << std::endl;
