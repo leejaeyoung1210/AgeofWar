@@ -89,7 +89,10 @@ public:
 	{
 		return hitBox;
 	}
-
+	const HitBox& GetRangeHitBox() const
+	{
+		return rangehitBox;
+	}
 	void OnDamage(int damage);
 	int GetHp() const { return hp; }
 	void SetHp(int hp) { this->hp = hp; }

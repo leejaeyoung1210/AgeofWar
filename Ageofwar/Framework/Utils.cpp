@@ -222,6 +222,34 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
     return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());
 }
 
+bool Utils::CheckCircleRectCollision(const sf::CircleShape& circle, const sf::RectangleShape& rect)
+{
+    // 1. AABB 빠른 검사: 겹치지 않으면 false
+    if (!circle.getGlobalBounds().intersects(rect.getGlobalBounds()))
+        return false;
+
+    // 2. 원의 중심과 반지름
+    sf::Vector2f circleCenter = circle.getPosition();  // 중심 (SetOrigin(Origins::MC) 필수!)
+    float radius = circle.getRadius();
+
+    // 3. 사각형의 global bounds (회전된 것은 정확히 못 잡음)
+    sf::FloatRect rectBounds = rect.getGlobalBounds();
+
+    // 4. 가장 가까운 점을 rect에서 찾음 (Clamp)
+    float closestX = Utils::Clamp(circleCenter.x, rectBounds.left, rectBounds.left + rectBounds.width);
+    float closestY = Utils::Clamp(circleCenter.y, rectBounds.top, rectBounds.top + rectBounds.height);
+
+    // 5. 거리 계산
+    float dx = circleCenter.x - closestX;
+    float dy = circleCenter.y - closestY;
+
+    // 6. 반지름 안에 들어오는지 검사
+    return (dx * dx + dy * dy) <= (radius * radius);
+
+
+    return false;
+}
+
 bool Utils::CheckCircleCollision(const sf::Vector2f& centerA, float radiusA, const sf::Vector2f& centerB, float radiusB)
 {
     float distanceSqr = SqrMagnitude(centerA - centerB);

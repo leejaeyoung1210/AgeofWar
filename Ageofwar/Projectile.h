@@ -39,6 +39,7 @@ public:
 	Projectile(const std::string& name = "");
 	virtual ~Projectile() = default;
 
+	sf::Vector2f GetPosition() const { return position; }
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float rot) override;
 	void SetScale(const sf::Vector2f& s) override;
@@ -75,6 +76,6 @@ public:
 	void SetTeam(Team t) { team = t; }
 	Team GetTeam() const { return team; }
 	
-
+	float GetSpeed() const { return speed; }
 };
 

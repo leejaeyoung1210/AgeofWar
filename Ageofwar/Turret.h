@@ -55,10 +55,10 @@ public:
 
 	sf::FloatRect GetLocalBounds() const override
 	{
-		return turrethitBox.circle.getLocalBounds();
+		return turrethitBox.circle.getLocalBounds(); 
 	}
 
-	sf::FloatRect GetGlobalBounds() const
+	sf::FloatRect GetGlobalBounds() const override
 	{
 		return turrethitBox.circle.getGlobalBounds();
 	}

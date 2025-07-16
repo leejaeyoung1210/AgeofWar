@@ -36,6 +36,12 @@ void GameScene::Init()
 	texIds.push_back("graphics/cave_turret_1_attack0001.png");
 	texIds.push_back("graphics/cave_turret_2_attack0001.png");
 	texIds.push_back("graphics/cave_turret_3_attack0001.png");
+	//투사체
+	texIds.push_back("graphics/cave_turret_1_projectile.png");
+	texIds.push_back("graphics/cave_turret_2_projectile.png");
+	texIds.push_back("graphics/cave_turret_3_projectile.png");
+
+
 	//폰트
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 

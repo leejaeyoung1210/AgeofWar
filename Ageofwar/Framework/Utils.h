@@ -52,6 +52,7 @@ public:
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
 	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB);
+	static bool CheckCircleRectCollision(const sf::CircleShape& circle, const sf::RectangleShape& rect);
 	static bool CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB);
 	static bool CheckCircleCollision(const sf::Vector2f& centerA, float radiusA, const sf::Vector2f& centerB, float radiusB);
 	static bool PointInTransformBounds(const sf::Transformable& transformable,

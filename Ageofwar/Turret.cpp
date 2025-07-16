@@ -13,7 +13,7 @@ void Turret::Init()
 {
 	Unit::Init();
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;	
+	sortingOrder = 0;
 }
 
 void Turret::Release()
@@ -22,12 +22,12 @@ void Turret::Release()
 
 void Turret::Reset()
 {
-	Unit::Reset();	
+	Unit::Reset();
 	body.setTexture(TEXTURE_MGR.Get(texId), true);
 	SetOrigin(Origins::MC);
 	SetPosition({ 0.f, 0.f });
 	SetScale({ 0.4f, 0.4f });
-	look = { 1.0f,0.f };	
+	look = (team == Team::Team1) ? sf::Vector2f{ 1.f, 0.f } : sf::Vector2f{ -1.f, 0.f };
 }
 
 void Turret::Update(float dt)
@@ -37,11 +37,11 @@ void Turret::Update(float dt)
 		return;
 	}
 
-	turrethitBox.UpdateTransform(body, GetRadius());
-	float size = turrethitBox.Getradius();	
+	float radius = std::max(body.getLocalBounds().width, body.getLocalBounds().height) / 2.f;
+	turrethitBox.UpdateTransform(body, radius);
 
 	attackTimer += dt;
-	
+
 	const auto& allUnits = gameScene->GetAllUnits();
 
 	for (Unit* unit : allUnits)
@@ -52,26 +52,37 @@ void Turret::Update(float dt)
 		if (unit->GetTeam() == this->GetTeam())
 			continue;
 
-		if (Utils::CheckCollision(turrethitBox.rect, unit->GetHitBox().rect))
+
+		if (Utils::CheckCircleRectCollision(turrethitBox.circle, unit->GetHitBox().rect))
 		{
 			look = Utils::GetNormal(unit->GetPosition() - GetPosition());
+			if (scale.x < 0) // 오른쪽을 바라보는 터렛이라면
+			{
+				look = -look; // 방향 반전
+			}
+			
 			SetRotation(Utils::Angle(look));
 
 			if (attackTimer >= attackInterval)
 			{
-				attackTimer = 0.f;
+				attackTimer = 0.f;				
 				Shoot();
-				break; 			
+				std::cout << "발사" << std::endl;
+				break;
 			}
 		}
 	}
 }
 void Turret::Draw(sf::RenderWindow& window)
 {
-	if (isSpawn)
 	{
 		window.draw(body);
 		turrethitBox.Draw(window);
+		for (auto projectile : projectileList)
+		{
+			if (projectile->GetActive()) // 활성 상태라면
+				projectile->Draw(window);
+		}
 	}
 }
 
@@ -82,23 +93,23 @@ void Turret::SetType(Turretypes type)
 	{
 	case Turretypes::turret1:
 		texId = "graphics/cave_turret_1_attack0001.png";
-		std::cout << "터렛 타입: turret1" << std::endl;		
+		std::cout << "터렛 타입: turret1" << std::endl;
 		attackInterval = 2;
-		turrethitBox.sizeplus = { 400.f,400.f };
+		turrethitBox.radiusplus = { 700.f };
 		break;
 
 	case Turretypes::turret2:
-		texId = "graphics/cave_turret_2_attack0001.png";		
+		texId = "graphics/cave_turret_2_attack0001.png";
 		std::cout << "터렛 타입: turret2" << std::endl;
 		attackInterval = 1;
-		turrethitBox.sizeplus = { 400.f,300.f };
+		turrethitBox.radiusplus = { 50.f };
 		break;
 
 	case Turretypes::turret3:
-		texId = "graphics/cave_turret_3_attack0001.png";		
+		texId = "graphics/cave_turret_3_attack0001.png";
 		std::cout << "터렛 타입: turret3" << std::endl;
 		attackInterval = 3;
-		turrethitBox.sizeplus = { 500.f,300.f };
+		turrethitBox.radiusplus = { 50.f };
 		break;
 	}
 }
@@ -136,24 +147,15 @@ void Turret::Shoot()
 	{
 		projectile = projectilePool.front();
 		projectilePool.pop_front();
-		projectile->SetActive(true);	
-	}
-	projectile->Reset();
-
+		projectile->SetActive(true);
+	}	
 	projectile->SetType(ConvertTurretTypeToProjectileType(type));
-	projectile->Fire(position + look * 20.f, look);
+	projectile->Reset();
+	projectile->SetTeam(this->GetTeam());	
+	float a = (team == Team::Team1) ? 25.f : -25.f;
+	projectile->Fire(position + look * a, look);
 
 	projectileList.push_back(projectile);
 	gameScene->AddGameObject(projectile);
-
-
-
-
-
-
-
-
-
-
 }
 

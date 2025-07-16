@@ -63,15 +63,13 @@ void Projectile::Reset()
 	SetRotation(0.f);
 	SetScale({ 1.f, 1.f });
 
-	direction = { 0.f, 0.f };
-	speed = 0;
-	damage = 0;
-
 }
 
 void Projectile::Update(float dt)
 {
-	SetPosition(position + direction * speed * dt);
+
+	SetPosition(GetPosition() + direction * speed * dt);
+
 	hitBox.UpdateTransform(body, GetLocalBounds());
 
 	const auto& allUnits = gameScene->GetAllUnits();
@@ -80,9 +78,20 @@ void Projectile::Update(float dt)
 		if (unit->GetTeam() == turret->GetTeam())
 			continue;
 
+		auto& hb = unit->GetHitBox();
+		auto& phb = this->hitBox;
+
+		std::cout << "Unit HitBox pos: " << hb.rect.getPosition().x << "," << hb.rect.getPosition().y
+			<< " size: " << hb.rect.getSize().x << "," << hb.rect.getSize().y << std::endl;
+		std::cout << "Projectile HitBox pos: " << phb.rect.getPosition().x << "," << phb.rect.getPosition().y
+			<< " size: " << phb.rect.getSize().x << "," << phb.rect.getSize().y << std::endl;
+
+
+
 		if (Utils::CheckCollision(hitBox.rect, unit->GetHitBox().rect))
 		{
 			unit->OnDamage(damage);
+			SetActive(false);
 			break;
 		}
 	}
@@ -100,21 +109,21 @@ void Projectile::SetType(ProjectileTypes type)
 	switch (this->type)
 	{
 	case ProjectileTypes::typ1:
-		texId = "graphics/cave_turret_1_attack0001.png";
+		texId = "graphics/cave_turret_1_projectile.png";
 		std::cout << "발사체 1" << std::endl;
-		speed = 100;
+		speed = 500;
 		damage = 15;
 		break;
 
 	case ProjectileTypes::typ2:
-		texId = "graphics/cave_turret_2_attack0001.png";
+		texId = "graphics/cave_turret_2_projectile.png";
 		std::cout << "터렛 타입: turret2" << std::endl;
 		speed = 300;
 		damage = 10;
 		break;
 
 	case ProjectileTypes::typ3:
-		texId = "graphics/cave_turret_3_attack0001.png";
+		texId = "graphics/cave_turret_3_projectile.png";
 		std::cout << "터렛 타입: turret3" << std::endl;
 		speed = 200;
 		damage = 20;
@@ -125,7 +134,7 @@ void Projectile::SetType(ProjectileTypes type)
 void Projectile::Fire(const sf::Vector2f& pos, const sf::Vector2f& dir)
 {
 	SetPosition(pos);
-	direction = dir;
+	direction = (team == Team::Team2) ? -dir : dir;
 	SetRotation(Utils::Angle(direction));
 
 }
