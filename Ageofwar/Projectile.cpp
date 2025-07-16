@@ -78,16 +78,6 @@ void Projectile::Update(float dt)
 		if (unit->GetTeam() == turret->GetTeam())
 			continue;
 
-		auto& hb = unit->GetHitBox();
-		auto& phb = this->hitBox;
-
-		std::cout << "Unit HitBox pos: " << hb.rect.getPosition().x << "," << hb.rect.getPosition().y
-			<< " size: " << hb.rect.getSize().x << "," << hb.rect.getSize().y << std::endl;
-		std::cout << "Projectile HitBox pos: " << phb.rect.getPosition().x << "," << phb.rect.getPosition().y
-			<< " size: " << phb.rect.getSize().x << "," << phb.rect.getSize().y << std::endl;
-
-
-
 		if (Utils::CheckCollision(hitBox.rect, unit->GetHitBox().rect))
 		{
 			unit->OnDamage(damage);

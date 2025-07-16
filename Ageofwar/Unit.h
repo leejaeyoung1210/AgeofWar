@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "HitBox.h"
+#include "CircleHitBox.h"
 
 
 
@@ -43,7 +44,7 @@ protected:
 	GameScene* gameScene = nullptr;
 	
 	HitBox hitBox;
-	HitBox rangehitBox;
+	CircleHitBox rangeCirclehitBox;
 	
 
 public:
@@ -89,10 +90,12 @@ public:
 	{
 		return hitBox;
 	}
-	const HitBox& GetRangeHitBox() const
+
+	const CircleHitBox& GetRangeCirclehitBox() const
 	{
-		return rangehitBox;
+		return rangeCirclehitBox;
 	}
+
 	void OnDamage(int damage);
 	int GetHp() const { return hp; }
 	void SetHp(int hp) { this->hp = hp; }

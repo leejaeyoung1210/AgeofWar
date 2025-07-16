@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Player2.h"
 #include "GameScene.h"
+#include "CircleHitBox.h"
 
 Unit::Unit(const std::string& name)
 	: GameObject(name)
@@ -45,8 +46,7 @@ void Unit::SetOrigin(Origins preset)
 void Unit::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 0;
-	rangehitBox.sizeplus = { 250.f,0.f };
+	sortingOrder = 0;	
 
 	SetType(type);
 }
@@ -67,6 +67,11 @@ void Unit::Reset()
 	hp = maxHp;
 	attackTimer = 0.f;
 	speed = originalSpeed;
+
+	if (type == Types::range)
+	{
+		rangeCirclehitBox.radiusplus = { 100.f };
+	}
 }
 
 void Unit::Update(float dt)
@@ -75,7 +80,8 @@ void Unit::Update(float dt)
 
 	if (type == Types::range)
 	{
-		rangehitBox.UpdateTransform(body, GetLocalBounds());
+		float radius = std::max(body.getLocalBounds().width, body.getLocalBounds().height) / 2.f;
+		rangeCirclehitBox.UpdateTransform(body, radius);
 	}
 
 	SetPosition(GetPosition() + direction * speed * dt);
@@ -83,8 +89,6 @@ void Unit::Update(float dt)
 	attackTimer += dt;
 	//충돌여부확인용
 	
-
-
 	bool isColliding = false;
 
 	const auto& allUnits = gameScene->GetAllUnits();
@@ -118,8 +122,7 @@ void Unit::Update(float dt)
 				}
 			}
 			else
-			{
-				
+			{				
 				speed = 0.f;
 								
 				if (attackTimer > attackInterval)
@@ -132,7 +135,7 @@ void Unit::Update(float dt)
 			}
 		}
 		else if (type == Types::range &&
-			Utils::CheckCollision(rangehitBox.rect, target->GetHitBox().rect))
+			Utils::CheckCircleRectCollision(rangeCirclehitBox.circle, target->GetHitBox().rect))
 		{
 			if (target->GetTeam() != this->GetTeam())
 			{
@@ -156,7 +159,7 @@ void Unit::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	hitBox.Draw(window);
-	rangehitBox.Draw(window);
+	rangeCirclehitBox.Draw(window);
 }
 
 void Unit::SetType(Types type)
