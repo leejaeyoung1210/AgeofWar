@@ -3,6 +3,7 @@
 #include "HitBox.h"
 
 
+
 class GameScene;
 
 class Unit :    public GameObject
@@ -16,12 +17,7 @@ public:
 		tank,
 	};
 
-	enum class Team
-	{
-		None,
-		Team1,  
-		Team2,  
-	};
+	
 
 	static const int TotalTypes = 3;
 
@@ -38,7 +34,7 @@ protected:
 	int maxHp = 0;
 	float speed = 0.f;
 	int damage = 0;
-	float attackInterval = 0.3f;
+	float attackInterval = 0.f;
 	float originalSpeed = 50.f;
 
 	int hp;

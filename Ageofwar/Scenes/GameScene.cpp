@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Player2.h"
 #include "Base.h"
+#include "Turret.h"
+
 
 int GameScene::Gold = 0;
 int GameScene::Exp = 0;
@@ -30,7 +32,11 @@ void GameScene::Init()
 	texIds.push_back("graphics/cave_melee_walk0001.png");
 	texIds.push_back("graphics/cave_range_walk0001.png");
 	texIds.push_back("graphics/cave_tank_walk0001.png");
-
+	//터렛
+	texIds.push_back("graphics/cave_turret_1_attack0001.png");
+	texIds.push_back("graphics/cave_turret_2_attack0001.png");
+	texIds.push_back("graphics/cave_turret_3_attack0001.png");
+	//폰트
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
 
 	for (int i = 0; i < 100; ++i)
@@ -69,7 +75,7 @@ void GameScene::Enter()
 	base->Reset();
 	base->SetPosition({ 100.f, 570.f });
 	base->SetActive(true);
-	base->SetTeam(Unit::Team::Team1);
+	base->SetTeam(Team::Team1);
 	allUnits.push_back(base);
 
 	base2 = (Base*)AddGameObject(new Base("base2"));
@@ -77,10 +83,20 @@ void GameScene::Enter()
 	base2->Reset();
 	base2->SetPosition({ -1000.f, 570.f });
 	base2->SetActive(true);
-	base2->SetTeam(Unit::Team::Team2);
+	base2->SetTeam(Team::Team2);
 	allUnits.push_back(base2);
 
-
+	turret = (Turret*)AddGameObject(new Turret("Turret"));
+	turret->Init();	
+	turret->SetType(Turret::Turretypes::turret1);
+	turret->Reset();
+	turret->Spawn({ 100.f, 300.f });
+	turret->SetActive(true);
+	turret->SetTeam(Team::Team1);
+	allUnits.push_back(turret);
+		
+	
+	
 
 }
 void GameScene::Exit()
@@ -169,8 +185,7 @@ void GameScene::Update(float dt)
 
 void GameScene::Draw(sf::RenderWindow& window)
 {
-	window.draw(background);
-
+	window.draw(background);	
 	for (auto go : gameObjects)
 	{
 		if (go->GetActive())
@@ -200,7 +215,7 @@ void GameScene::SpawnPlayer2(int count)
 		player2->SetType((Player2::Types)Utils::RandomRange(0, Player2::TotalTypes));
 		player2->Reset();
 		player2->SetPosition({ 700.f, 630.f });
-		player2->SetTeam(Unit::Team::Team2);
+		player2->SetTeam(Team::Team2);
 		allUnits.push_back(player2);
 
 	}
@@ -225,7 +240,7 @@ void GameScene::SpawnPlayer(int count)
 		player->SetType((Player::Types)Utils::RandomRange(0, Player::TotalTypes));
 		player->Reset();
 		player->SetPosition({ 300.f, 630.f });
-		player->SetTeam(Unit::Team::Team1);
+		player->SetTeam(Team::Team1);
 		allUnits.push_back(player);
 
 	}

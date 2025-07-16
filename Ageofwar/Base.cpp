@@ -8,7 +8,8 @@ Base::Base(const std::string& name)
 
 void Base::Init()
 {
-	Unit::Init();
+	Unit::Init();	
+	sortingOrder = -1;
 }
 
 void Base::Reset()
@@ -20,9 +21,8 @@ void Base::Reset()
 }
 
 void Base::Update(float dt)
-{
-	hitBox.UpdateTransform(body, GetLocalBounds());
-
+{	
+	Unit::Update(dt);
 }
 
 void Base::Draw(sf::RenderWindow& window)

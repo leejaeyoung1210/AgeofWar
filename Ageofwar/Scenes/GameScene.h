@@ -6,8 +6,10 @@
 #include "Player.h"
 
 
+
 class TextGo;
 class Unit;
+class Turret;
 
 class GameScene : public Scene
 {
@@ -18,6 +20,7 @@ protected:
 		
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
+	Turret* turret = nullptr;
 	
 	Base* base = nullptr;
 	Base* base2 = nullptr;

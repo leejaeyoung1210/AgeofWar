@@ -32,3 +32,10 @@ enum class Sides
 	Right,
 	None,
 };
+
+enum class Team
+{
+	None,
+	Team1,
+	Team2,
+};
