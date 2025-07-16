@@ -90,7 +90,7 @@ void GameScene::Enter()
 	turret->Init();	
 	turret->SetType(Turret::Turretypes::turret1);
 	turret->Reset();
-	turret->Spawn({ 100.f, 300.f });
+	turret->Spawn({ 250.f, 500.f });
 	turret->SetActive(true);
 	turret->SetTeam(Team::Team1);
 	allUnits.push_back(turret);
@@ -158,7 +158,7 @@ void GameScene::Update(float dt)
 		if (spawntimer >= spawncool)
 		{
 			SpawnPlayer2(1);	
-			SpawnPlayer(1);
+			//SpawnPlayer(1);
 			spawntimer = 0.f;
 		}
 	}

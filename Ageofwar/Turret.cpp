@@ -82,7 +82,7 @@ void Turret::SetType(Turretypes type)
 		texId = "graphics/cave_turret_1_attack0001.png";
 		damage = 15;
 		attackInterval = 3.f;
-		turrethitBox.sizeplus = { 300.f,300.f };
+		turrethitBox.sizeplus = { 50.f,50.f };
 		break;
 	case Turretypes::turret2:
 		texId = "graphics/cave_turret_2_attack0001.png";
