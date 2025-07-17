@@ -21,6 +21,8 @@ GameScene::GameScene()
 
 void GameScene::Init()
 {
+	FRAMEWORK.GetWindow().setMouseCursorVisible(false);
+
 	//배경
 	texIds.push_back("graphics/background.png");
 	//집
@@ -56,7 +58,7 @@ void GameScene::Init()
 	}
 
 
-
+	
 	Scene::Init();
 }
 
@@ -223,7 +225,7 @@ void GameScene::Update(float dt)
 		offset = (offset > 0) ? speed : -speed;
 	}
 
-	sf::Vector2f pos = worldView.getCenter();
+	
 	pos.x += offset;
 
 	pos.x = Utils::Clamp(pos.x, minX, maxX);

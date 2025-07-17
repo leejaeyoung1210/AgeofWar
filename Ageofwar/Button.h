@@ -1,24 +1,50 @@
 #pragma once
 #include "GameObject.h"
-class Button :    public GameObject
+#include "InputMgr.h"
+#include "Scene.h"
+class Scene;
+
+class Button : public GameObject
 {
 protected:
-	sf::Texture buttonTexture; 
-	
+	Scene* scene;
+
+	sf::Text but;
+	sf::Text but2;
+	sf::Text but3;
+	sf::Text but4;
+	sf::Text but5;
+	sf::Text but6;
+
+
+	sf::Vector2f cursor;
+	sf::FloatRect buttonBounds;
+
+	bool spawn = false;
+
 
 public:
 	Button(const std::string& name = "");
 	virtual ~Button() = default;
 
 	// GameObject을(를) 통해 상속됨
-	void Init() override;
-	void Release() override;
-	void Reset() override;
-	void Update(float dt) override;
-	void Draw(sf::RenderWindow& window) override;
-	//텍스쳐 구분화 
-	//게임씬에서의 인풋 받아다가 그걸로 유닛에 명령 전달
-	//버튼이동 draw 온오프식으로
+	void Init();
+	void Release();
+	void Reset();
+	void Update(float dt);
+	void Draw(sf::RenderWindow& window);
+
+	sf::Vector2f GetMousePositionUI() const
+	{		
+		sf::Vector2i mousePosScreen = InputMgr::GetMousePosition();		
+		return scene->ScreenToUi(mousePosScreen);
+	}
 	
+	bool IsMouseOver(const sf::FloatRect& buttonBounds) const
+	{
+		sf::Vector2f mousePosUI = GetMousePositionUI();
+		return buttonBounds.contains(mousePosUI);
+	}
+
 };
 
