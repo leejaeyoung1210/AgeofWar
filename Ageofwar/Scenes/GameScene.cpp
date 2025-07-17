@@ -24,7 +24,6 @@ GameScene::GameScene()
 
 void GameScene::Init()
 {
-	uiView.setSize(1280.f, 720.f);
 	//배경
 	texIds.push_back("graphics/background.png");
 	//집
@@ -59,6 +58,10 @@ void GameScene::Init()
 		playerPool.push_back(player);
 	}
 
+	
+	right = worldView.getCenter().x + worldView.getSize().x * 0.5f;
+	left = worldView.getCenter().x - worldView.getSize().x * 0.5f;
+	
 
 	Scene::Init();
 }
@@ -69,18 +72,23 @@ void GameScene::Enter()
 
 	background = (Background*)AddGameObject(new Background("background"));
 	background->Init();
-		
+
+	sf::FloatRect bounds = background->GetLocalBounds();
+
+	//배그라운드 가로사이즈
+	maxX = bounds.left + bounds.width - worldView.getSize().x * 0.6f;
+	minX = bounds.left + worldView.getSize().x * 0.6f;
+
 	//윈도우 사이즈
 	auto winsize = FRAMEWORK.GetWindowSizeF();
 	//윈도우 사이즈의 중심
 	sf::Vector2f center{ winsize.x * 0.5f, winsize.y * 0.5f };
 	//보여주는 화면 크기 
-	
+
 	worldView.setSize(winsize);
 	worldView.setCenter(center);
 	uiView.setSize(winsize);
 	uiView.setCenter(center);
-
 
 
 	base = (Base*)AddGameObject(new Base("base"));
@@ -89,13 +97,13 @@ void GameScene::Enter()
 	base->SetPosition({ 100.f, 570.f });
 	base->SetActive(true);
 	base->SetTeam(Team::Team1);
-	allUnits.push_back(base);	
+	allUnits.push_back(base);
 
 	base2 = (Base*)AddGameObject(new Base("base2"));
 	base2->Init();
-	base2->Reset();	
+	base2->Reset();
 	base2->SetScale({ -0.4f,0.4f });
-	base2->SetPosition({ 800.f, 570.f });
+	base2->SetPosition({2154.f, 570.f });
 	base2->SetActive(true);
 	base2->SetTeam(Team::Team2);
 	allUnits.push_back(base2);
@@ -107,20 +115,21 @@ void GameScene::Enter()
 	turret->Spawn({ 250.f, 500.f });
 	turret->SetActive(true);
 	turret->SetTeam(Team::Team1);
-	allUnits.push_back(turret);	
+	allUnits.push_back(turret);
 
 	turret2 = (Turret*)AddGameObject(new Turret("Turret2"));
 	turret2->Init();
 	turret2->SetType(Turret::Turretypes::turret1);
 	turret2->Reset();
 	turret2->SetScale({ -0.4f,0.4f });
-	turret2->Spawn({ 700.f, 500.f });
+	turret2->Spawn({ 2004.f, 500.f });
 	turret2->SetActive(true);
 	turret2->SetTeam(Team::Team2);
-	allUnits.push_back(turret2);			
-	
+	allUnits.push_back(turret2);
+
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/pngegg.png"));
 	Utils::SetOrigin(cursor, Origins::MC);
+
 
 }
 void GameScene::Exit()
@@ -147,13 +156,12 @@ void GameScene::Exit()
 }
 
 void GameScene::Update(float dt)
-{		
+{
 	//마우스 좌표 월드에서 UI 좌표로 변경하기	
 	cursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 
 	Scene::Update(dt);
-	
-	
+
 	auto it = allUnits.begin();
 	while (it != allUnits.end())
 	{
@@ -165,15 +173,14 @@ void GameScene::Update(float dt)
 				player2Pool.push_back(p2);
 			/*else if (auto turret = dynamic_cast<Turret*>(*it))
 				turretPool.push_back(turret);*/
-			
-			it = allUnits.erase(it);		
+
+			it = allUnits.erase(it);
 		}
 		else
 		{
 			++it;
 		}
 	}
-		
 
 	spawntimer += dt;
 	wavetimer += dt;
@@ -198,20 +205,38 @@ void GameScene::Update(float dt)
 		}
 	}
 
-
 	for (auto pl : allUnits)
 	{
 		if (pl->GetActive())
 			pl->Update(dt);
 	}
 
+	// 마우스 방향에 따라 뷰가 이동해야한다 
+	sf::Vector2f woldmouse = ScreenToWorld(InputMgr::GetMousePosition());
+	sf::Vector2f offset(woldmouse.x - worldView.getCenter().x, 0.f);
+
+	//abs는 절대값 양수로 변한시켜주는 함수
+	if (std::abs(offset.x) > speed)
+	{
+		offset.x = (offset.x > 0) ? speed : -speed;
+	}
+
+	sf::Vector2f pos = worldView.getCenter();
+	pos.x += offset.x;
+
+	pos.x = Utils::Clamp(pos.x, minX, maxX);
 	
+	offset.x = pos.x - worldView.getCenter().x;	
+
+	worldView.move(offset);
+	
+
 }
 
 void GameScene::Draw(sf::RenderWindow& window)
-{	
-	Scene::Draw(window);	
-	
+{
+	Scene::Draw(window);
+
 	window.setView(uiView);
 	window.draw(cursor);
 

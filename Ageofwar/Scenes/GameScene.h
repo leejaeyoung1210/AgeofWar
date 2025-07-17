@@ -17,9 +17,6 @@ class GameScene : public Scene
 {
 protected:
 	
-	
-	sf::View uiView;
-	sf::View worldView;
 	sf::Sprite cursor;
 		
 	Background* background = nullptr;
@@ -46,6 +43,15 @@ protected:
 
 	float someDelayTime = 7.f;
 	float waveDelayTimer = 0.f;
+
+	float speed = 0.5f;
+
+	float minX;
+	float maxX;
+	float left;
+	float right;
+
+	sf::Vector2f pos = worldView.getCenter();;
 	
 public:
 	static int Gold;

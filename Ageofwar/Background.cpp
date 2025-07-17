@@ -10,10 +10,7 @@ void Background::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 0;	
-	background.setTexture(TEXTURE_MGR.Get(texId), true);
-		
-	
-
+	background.setTexture(TEXTURE_MGR.Get(texId), true);	
 }
 
 
