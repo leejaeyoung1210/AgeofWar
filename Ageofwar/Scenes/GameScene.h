@@ -7,22 +7,29 @@
 
 
 
+
 class TextGo;
 class Unit;
 class Turret;
+class Background;
 
 class GameScene : public Scene
 {
 protected:
-	sf::Sprite background;
 	
+	
+	sf::View uiView;
+	sf::View worldView;
 	sf::Sprite cursor;
 		
+	Background* background = nullptr;
+
 	Player* player = nullptr;
 	Player2* player2 = nullptr;
+
 	Turret* turret = nullptr;
-	Turret* turret2 = nullptr;
-	
+	Turret* turret2 = nullptr;	
+
 	Base* base = nullptr;
 	Base* base2 = nullptr;
 

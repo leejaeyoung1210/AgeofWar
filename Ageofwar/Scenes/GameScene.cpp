@@ -10,6 +10,7 @@
 #include "Player2.h"
 #include "Base.h"
 #include "Turret.h"
+#include "Background.h"
 
 
 int GameScene::Gold = 0;
@@ -40,6 +41,8 @@ void GameScene::Init()
 	texIds.push_back("graphics/cave_turret_1_projectile.png");
 	texIds.push_back("graphics/cave_turret_2_projectile.png");
 	texIds.push_back("graphics/cave_turret_3_projectile.png");
+	//마우스
+	texIds.push_back("graphics/pngegg.png");
 
 
 	//폰트
@@ -64,17 +67,21 @@ void GameScene::Enter()
 {
 	Scene::Enter();
 
-
-	sf::FloatRect windowbound = FRAMEWORK.GetWindowBounds();
-	auto size = FRAMEWORK.GetWindowSizeF();
-	sf::Vector2f center{ size.x * 0.5f, size.y * 0.5f };
-	uiView.setSize(size);
-	uiView.setCenter(center);
-	worldView.setSize(size);
+	background = (Background*)AddGameObject(new Background("background"));
+	background->Init();
+		
+	//윈도우 사이즈
+	auto winsize = FRAMEWORK.GetWindowSizeF();
+	//윈도우 사이즈의 중심
+	sf::Vector2f center{ winsize.x * 0.5f, winsize.y * 0.5f };
+	//보여주는 화면 크기 
+	
+	worldView.setSize(winsize);
 	worldView.setCenter(center);
+	uiView.setSize(winsize);
+	uiView.setCenter(center);
 
-	background.setTexture(TEXTURE_MGR.Get("graphics/background.png"));
-	background.setPosition(0.f, 0.f);
+
 
 	base = (Base*)AddGameObject(new Base("base"));
 	base->Init();
@@ -82,7 +89,7 @@ void GameScene::Enter()
 	base->SetPosition({ 100.f, 570.f });
 	base->SetActive(true);
 	base->SetTeam(Team::Team1);
-	allUnits.push_back(base);
+	allUnits.push_back(base);	
 
 	base2 = (Base*)AddGameObject(new Base("base2"));
 	base2->Init();
@@ -100,7 +107,7 @@ void GameScene::Enter()
 	turret->Spawn({ 250.f, 500.f });
 	turret->SetActive(true);
 	turret->SetTeam(Team::Team1);
-	allUnits.push_back(turret);
+	allUnits.push_back(turret);	
 
 	turret2 = (Turret*)AddGameObject(new Turret("Turret2"));
 	turret2->Init();
@@ -110,14 +117,15 @@ void GameScene::Enter()
 	turret2->Spawn({ 700.f, 500.f });
 	turret2->SetActive(true);
 	turret2->SetTeam(Team::Team2);
-	allUnits.push_back(turret2);
-		
+	allUnits.push_back(turret2);			
 	
-	
+	cursor.setTexture(TEXTURE_MGR.Get("graphics/pngegg.png"));
+	Utils::SetOrigin(cursor, Origins::MC);
 
 }
 void GameScene::Exit()
 {
+	//화면에 마우스 띄우기준비
 	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 
 	for (Unit* unit : allUnits)
@@ -139,12 +147,12 @@ void GameScene::Exit()
 }
 
 void GameScene::Update(float dt)
-{
-	Scene::Update(dt);
+{		
+	//마우스 좌표 월드에서 UI 좌표로 변경하기	
+	cursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 
-	// 마우스 위치 가져오기
-	sf::Vector2i screenPos = InputMgr::GetMousePosition();
-	sf::Vector2f mousePos(static_cast<float>(screenPos.x), static_cast<float>(screenPos.y));
+	Scene::Update(dt);
+	
 	
 	auto it = allUnits.begin();
 	while (it != allUnits.end())
@@ -201,15 +209,11 @@ void GameScene::Update(float dt)
 }
 
 void GameScene::Draw(sf::RenderWindow& window)
-{
-	window.draw(background);	
-	for (auto go : gameObjects)
-	{
-		if (go->GetActive())
-			go->Draw(window);
-	}
-
-	Scene::Draw(window);
+{	
+	Scene::Draw(window);	
+	
+	window.setView(uiView);
+	window.draw(cursor);
 
 }
 
@@ -234,6 +238,8 @@ void GameScene::SpawnPlayer2(int count)
 		player2->SetPosition({ 700.f, 630.f });
 		player2->SetTeam(Team::Team2);
 		allUnits.push_back(player2);
+		AddGameObject(player2);
+
 
 	}
 }
@@ -259,6 +265,7 @@ void GameScene::SpawnPlayer(int count)
 		player->SetPosition({ 300.f, 630.f });
 		player->SetTeam(Team::Team1);
 		allUnits.push_back(player);
+		AddGameObject(player);
 
 	}
 }

@@ -91,6 +91,7 @@ void Scene::Draw(sf::RenderWindow& window)
 			obj->Draw(window);
 		}
 	}
+
 	ApplyPendingChanges();
 }
 

@@ -1,9 +1,12 @@
 #pragma once
 
+class Unit;
+
 class Scene
 {
 protected:
 	std::list<GameObject*> gameObjects;
+	std::list<Unit*> allUnits;
 
 	std::list<GameObject*> objectsToAdd;
 	std::list<GameObject*> objectsToRemove;
