@@ -86,8 +86,9 @@ void GameScene::Enter()
 
 	base2 = (Base*)AddGameObject(new Base("base2"));
 	base2->Init();
-	base2->Reset();
-	base2->SetPosition({ -1000.f, 570.f });
+	base2->Reset();	
+	base2->SetScale({ -0.4f,0.4f });
+	base2->SetPosition({ 800.f, 570.f });
 	base2->SetActive(true);
 	base2->SetTeam(Team::Team2);
 	allUnits.push_back(base2);
@@ -101,7 +102,7 @@ void GameScene::Enter()
 	turret->SetTeam(Team::Team1);
 	allUnits.push_back(turret);
 
-	turret2 = (Turret*)AddGameObject(new Turret("Turret"));
+	turret2 = (Turret*)AddGameObject(new Turret("Turret2"));
 	turret2->Init();
 	turret2->SetType(Turret::Turretypes::turret1);
 	turret2->Reset();
@@ -109,7 +110,7 @@ void GameScene::Enter()
 	turret2->Spawn({ 700.f, 500.f });
 	turret2->SetActive(true);
 	turret2->SetTeam(Team::Team2);
-	allUnits.push_back(turret);
+	allUnits.push_back(turret2);
 		
 	
 	
@@ -173,7 +174,7 @@ void GameScene::Update(float dt)
 	{
 		if (spawntimer >= spawncool)
 		{
-			SpawnPlayer2(1);	
+			//SpawnPlayer2(1);	
 			SpawnPlayer(1);
 			spawntimer = 0.f;
 		}

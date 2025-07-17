@@ -54,14 +54,15 @@ void Projectile::Release()
 void Projectile::Reset()
 {
 	gameScene = dynamic_cast<GameScene*>(SCENE_MGR.GetCurrentScene());
-	turret = (Turret*)gameScene->FindGameObject("Turret");
+	turret = (Turret*)gameScene->FindGameObject(team == Team::Team1 ? "Turret" : "Turret2");
 
 	body.setTexture(TEXTURE_MGR.Get(texId), true);
 	SetOrigin(Origins::MC);
 
-	SetPosition({ 0.f, 0.f });
-	SetRotation(0.f);
-	SetScale({ 1.f, 1.f });
+	if (team == Team::Team2)
+		SetScale({ -1.f, 1.f });
+	else
+		SetScale({ 1.f, 1.f });
 
 }
 
@@ -80,6 +81,7 @@ void Projectile::Update(float dt)
 
 		if (Utils::CheckCollision(hitBox.rect, unit->GetHitBox().rect))
 		{
+			std::cout << "충돌 대상: " << unit->GetName() << std::endl;
 			unit->OnDamage(damage);
 			SetActive(false);
 			break;
@@ -124,6 +126,7 @@ void Projectile::SetType(ProjectileTypes type)
 void Projectile::Fire(const sf::Vector2f& pos, const sf::Vector2f& dir)
 {
 	SetPosition(pos);
+
 	direction = (team == Team::Team2) ? -dir : dir;
 	SetRotation(Utils::Angle(direction));
 

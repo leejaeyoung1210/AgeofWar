@@ -13,11 +13,12 @@ void Base::Init()
 }
 
 void Base::Reset()
-{
+{	
 	texId = "graphics/base.png";
 	maxHp = 500;
-	Unit::Reset();
 
+	Unit::Reset();
+		
 }
 
 void Base::Update(float dt)

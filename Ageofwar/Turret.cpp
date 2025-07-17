@@ -95,7 +95,7 @@ void Turret::SetType(Turretypes type)
 		texId = "graphics/cave_turret_1_attack0001.png";
 		std::cout << "ем╥© е╦ют: turret1" << std::endl;
 		attackInterval = 2;
-		turrethitBox.radiusplus = { 700.f };
+		turrethitBox.radiusplus = { 300.f };
 		break;
 
 	case Turretypes::turret2:
