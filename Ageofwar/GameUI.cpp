@@ -51,11 +51,11 @@ void GameUI::Release()
 
 void GameUI::Reset()
 {
-	goldMessage.setString(std::to_string(GameScene::Gold));
+	/*goldMessage.setString(std::to_string(GameScene::Gold));
 	Utils::SetOrigin(goldMessage, Origins::TL);
 
 	expMessage.setString("Exp: " + std::to_string(GameScene::Exp));
-	Utils::SetOrigin(expMessage, Origins::TL);
+	Utils::SetOrigin(expMessage, Origins::TL);*/
 
 
 	hpBar.setSize({ BAR_SIZE,50.f });

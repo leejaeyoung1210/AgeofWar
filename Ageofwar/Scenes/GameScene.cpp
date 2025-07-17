@@ -13,9 +13,6 @@
 #include "Background.h"
 
 
-int GameScene::Gold = 0;
-int GameScene::Exp = 0;
-
 GameScene::GameScene()
 	: Scene(SceneIds::GameScene)
 {
@@ -58,10 +55,7 @@ void GameScene::Init()
 		playerPool.push_back(player);
 	}
 
-	
-	right = worldView.getCenter().x + worldView.getSize().x * 0.5f;
-	left = worldView.getCenter().x - worldView.getSize().x * 0.5f;
-	
+
 
 	Scene::Init();
 }
@@ -75,7 +69,7 @@ void GameScene::Enter()
 
 	sf::FloatRect bounds = background->GetLocalBounds();
 
-	//배그라운드 가로사이즈
+	//배그라운드 가로사이즈//월드뷰 범위정하려고
 	maxX = bounds.left + bounds.width - worldView.getSize().x * 0.6f;
 	minX = bounds.left + worldView.getSize().x * 0.6f;
 
@@ -103,7 +97,7 @@ void GameScene::Enter()
 	base2->Init();
 	base2->Reset();
 	base2->SetScale({ -0.4f,0.4f });
-	base2->SetPosition({2154.f, 570.f });
+	base2->SetPosition({ 2154.f, 570.f });
 	base2->SetActive(true);
 	base2->SetTeam(Team::Team2);
 	allUnits.push_back(base2);
@@ -189,7 +183,7 @@ void GameScene::Update(float dt)
 	{
 		if (spawntimer >= spawncool)
 		{
-			//SpawnPlayer2(1);	
+			SpawnPlayer2(1);
 			SpawnPlayer(1);
 			spawntimer = 0.f;
 		}
@@ -213,23 +207,29 @@ void GameScene::Update(float dt)
 
 	// 마우스 방향에 따라 뷰가 이동해야한다 
 	sf::Vector2f woldmouse = ScreenToWorld(InputMgr::GetMousePosition());
-	sf::Vector2f offset(woldmouse.x - worldView.getCenter().x, 0.f);
+	//오른쪽으로 가겠다는거 	
+	space = worldView.getSize().x * 0.45f;
+	leftBoundary = worldView.getCenter().x - space;
+	rightBoundary = worldView.getCenter().x + space;
+	offset = 0.f;
+	if (woldmouse.x < leftBoundary)
+		offset = woldmouse.x - leftBoundary;  
+	else if (woldmouse.x > rightBoundary)
+		offset = woldmouse.x - rightBoundary;
 
 	//abs는 절대값 양수로 변한시켜주는 함수
-	if (std::abs(offset.x) > speed)
+	if (std::abs(offset) > speed)
 	{
-		offset.x = (offset.x > 0) ? speed : -speed;
+		offset = (offset > 0) ? speed : -speed;
 	}
 
 	sf::Vector2f pos = worldView.getCenter();
-	pos.x += offset.x;
+	pos.x += offset;
 
 	pos.x = Utils::Clamp(pos.x, minX, maxX);
 	
-	offset.x = pos.x - worldView.getCenter().x;	
+	worldView.setCenter(pos);
 
-	worldView.move(offset);
-	
 
 }
 
@@ -260,7 +260,7 @@ void GameScene::SpawnPlayer2(int count)
 		}
 		player2->SetType((Player2::Types)Utils::RandomRange(0, Player2::TotalTypes));
 		player2->Reset();
-		player2->SetPosition({ 700.f, 630.f });
+		player2->SetPosition({ 1954.f, 630.f });
 		player2->SetTeam(Team::Team2);
 		allUnits.push_back(player2);
 		AddGameObject(player2);

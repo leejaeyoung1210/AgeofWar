@@ -70,7 +70,7 @@ void Unit::Reset()
 
 	if (type == Types::range)
 	{
-		rangeCirclehitBox.radiusplus = { 100.f };
+		rangeCirclehitBox.radiusplus = { 200.f };
 	}
 }
 

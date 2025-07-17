@@ -50,12 +50,18 @@ protected:
 	float maxX;
 	float left;
 	float right;
-
+	
 	sf::Vector2f pos = worldView.getCenter();;
 	
+	float space;
+	float leftBoundary;
+	float rightBoundary;
+	float offset;
+
+	
 public:
-	static int Gold;
-	static int Exp;
+	/*static int Gold;
+	static int Exp;*/
 	GameScene();	
 	~GameScene() = default;
 
