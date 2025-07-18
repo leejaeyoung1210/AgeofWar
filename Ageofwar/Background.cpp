@@ -7,10 +7,10 @@ Background::Background(const std::string& name)
 }
 
 void Background::Init()
-{
+{	
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 0;	
-	background.setTexture(TEXTURE_MGR.Get(texId), true);	
+	background.setTexture(TEXTURE_MGR.Get(texId), true);
 }
 
 
@@ -28,5 +28,5 @@ void Background::Update(float dt)
 
 void Background::Draw(sf::RenderWindow& window)
 {
-	window.draw(background);	
+	window.draw(background);
 }

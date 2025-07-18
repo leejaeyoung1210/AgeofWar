@@ -12,6 +12,7 @@ class TextGo;
 class Unit;
 class Turret;
 class Background;
+class Button;
 
 class GameScene : public Scene
 {
@@ -20,6 +21,7 @@ protected:
 	sf::Sprite cursor;
 		
 	Background* background = nullptr;
+	Button* button = nullptr;
 
 	Player* player = nullptr;
 	Player2* player2 = nullptr;

@@ -111,6 +111,7 @@ void Button::Update(float dt)
 
 void Button::Draw(sf::RenderWindow& window)
 {
+
 }
 
 void Button::ButtonTypeSettype(ButtonType type)

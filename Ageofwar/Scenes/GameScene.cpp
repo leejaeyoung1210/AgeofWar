@@ -11,6 +11,7 @@
 #include "Base.h"
 #include "Turret.h"
 #include "Background.h"
+#include "Button.h"
 
 
 GameScene::GameScene()
@@ -56,7 +57,7 @@ void GameScene::Init()
 		player->SetActive(false);
 		playerPool.push_back(player);
 	}
-
+	
 
 	
 	Scene::Init();
@@ -66,8 +67,8 @@ void GameScene::Enter()
 {
 	Scene::Enter();
 
-	/*background = (Background*)AddGameObject(new Background("background"));
-	background->Init();*/
+	background = (Background*)AddGameObject(new Background("background"));
+	background->Init();
 
 	sf::FloatRect bounds = background->GetLocalBounds();
 
@@ -87,7 +88,7 @@ void GameScene::Enter()
 	uiView.setCenter(center);
 
 
-	/*base = (Base*)AddGameObject(new Base("base"));
+	base = (Base*)AddGameObject(new Base("base"));
 	base->Init();
 	base->Reset();
 	base->SetPosition({ 100.f, 570.f });
@@ -121,7 +122,7 @@ void GameScene::Enter()
 	turret2->Spawn({ 2004.f, 500.f });
 	turret2->SetActive(true);
 	turret2->SetTeam(Team::Team2);
-	allUnits.push_back(turret2);*/
+	allUnits.push_back(turret2);
 
 	cursor.setTexture(TEXTURE_MGR.Get("graphics/pngegg.png"));
 	Utils::SetOrigin(cursor, Origins::MC);
@@ -224,7 +225,7 @@ void GameScene::Update(float dt)
 	{
 		offset = (offset > 0) ? speed : -speed;
 	}
-
+	sf::Vector2f pos = worldView.getCenter();
 	
 	pos.x += offset;
 

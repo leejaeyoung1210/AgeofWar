@@ -2,6 +2,7 @@
 #include "AnimationClip.h"
 #include "rapidcsv.h"
 
+//값을 불러오고 보관 접근제공
 bool AnimationClip::loadFromFile(const std::string& filePath)
 {
 	rapidcsv::Document doc(filePath);
