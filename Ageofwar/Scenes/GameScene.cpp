@@ -46,6 +46,27 @@ void GameScene::Init()
 
 	//폰트
 	fontIds.push_back("fonts/DS-DIGIT.ttf");
+	//애니메이션 
+	/*ANI_CLIP_MGR.Load("animations/meleeattack.csv");
+	ANI_CLIP_MGR.Load("animations/meleedie.csv");
+	ANI_CLIP_MGR.Load("animations/meleeidle.csv");
+	ANI_CLIP_MGR.Load("animations/meleewalk.csv");\
+
+	ANI_CLIP_MGR.Load("animations/rangedie.csv");
+	ANI_CLIP_MGR.Load("animations/rangeidle.csv");
+	ANI_CLIP_MGR.Load("animations/rangeidleattack.csv");
+	ANI_CLIP_MGR.Load("animations/rangemeleeattack.csv");
+	ANI_CLIP_MGR.Load("animations/rangewalk.csv");
+	ANI_CLIP_MGR.Load("animations/rangewalkattack.csv");
+
+	ANI_CLIP_MGR.Load("animations/tankattack.csv");
+	ANI_CLIP_MGR.Load("animations/tankdie.csv");
+	ANI_CLIP_MGR.Load("animations/tankidle.csv");
+	ANI_CLIP_MGR.Load("animations/tankwalk.csv");*/
+
+
+
+
 
 	for (int i = 0; i < 100; ++i)
 	{

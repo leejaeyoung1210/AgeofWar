@@ -45,8 +45,26 @@ void Unit::SetOrigin(Origins preset)
 
 void Unit::Init()
 {
+	animator.SetTarget(&body);
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;	
+
+	//animator.AddEvent("meleeidle", 0, []() {});
+	//animator.AddEvent("meleedie", 10, []() {});
+	//animator.AddEvent("meleewalk", 10, []() {});
+	//animator.AddEvent("meleeattack", 10, []() {});
+
+	//animator.AddEvent("rangeidle", 0, []() {});
+	//animator.AddEvent("rangedie", 10, []() {});
+	//animator.AddEvent("rangewalk", 10, []() {});
+	//animator.AddEvent("rangemeleeattack", 10, []() {});
+	//animator.AddEvent("rangeidleattack", 10, []() {});
+	//animator.AddEvent("rangewalkattack", 10, []() {});
+
+	//animator.AddEvent("tankidle", 0, []() {});
+	//animator.AddEvent("tankdie", 10, []() {});
+	//animator.AddEvent("tankwalk", 10, []() {});
+	//animator.AddEvent("tankattack", 10, []() {});
 
 	SetType(type);
 }
@@ -70,7 +88,7 @@ void Unit::Reset()
 
 	if (type == Types::range)
 	{
-		rangeCirclehitBox.radiusplus = { 200.f };
+		rangeCirclehitBox.radiusplus = { 400.f };
 	}
 }
 
@@ -88,7 +106,9 @@ void Unit::Update(float dt)
 
 	attackTimer += dt;
 	//충돌여부확인용
-	
+	bool isMoving = speed > 0.f;
+
+
 	bool isColliding = false;
 
 	const auto& allUnits = gameScene->GetAllUnits();
@@ -107,28 +127,36 @@ void Unit::Update(float dt)
 			{
 				sf::Vector2f toTarget = target->GetPosition() - position;
 				float dot = direction.x * toTarget.x + direction.y * toTarget.y;
-
+				
 				if (dot > 0) // 내 앞에 있으면 멈춤
 				{
 					speed = 0.f;
-					
+					/*PlayMoveAnimation("idle");*/
 					break;
 				}
 				else
 				{
 					// 내 뒤에 있으면 움직임 유지
 					speed = originalSpeed;
+					/*PlayMoveAnimation("walk");*/
 					continue;
 				}
 			}
 			else
 			{				
 				speed = 0.f;
-								
+				PlayMoveAnimation("idle");
 				if (attackTimer > attackInterval)
 				{
 					attackTimer = 0.f;
-					
+					/*if (type == Types::range)
+					{
+						PlayMoveAnimation("rangemeleeattack");
+					}
+					else
+					{
+						PlayMoveAnimation("attack");
+					}*/
 					target->OnDamage(damage);
 				}
 				break;
@@ -142,6 +170,14 @@ void Unit::Update(float dt)
 				if (attackTimer > attackInterval)
 				{
 					attackTimer = 0.f;
+					/*if (speed > 0)
+					{
+						PlayMoveAnimation("walkattack");
+					}
+					else
+					{
+						PlayMoveAnimation("idleattack");
+					}*/
 					target->OnDamage(damage);
 				}
 			}
@@ -172,21 +208,21 @@ void Unit::SetType(Types type)
 		maxHp = 2000;
 		speed = originalSpeed;
 		damage = 15;
-		attackInterval = 3.f;
+		attackInterval = 3.f;		
 		break;
 	case Types::range:
 		texId = "graphics/cave_range_walk0001.png";
 		maxHp = 1000;
 		speed = originalSpeed;
 		damage = 5;
-		attackInterval = 2.f;
+		attackInterval = 2.f;		
 		break;
 	case Types::tank:
 		texId = "graphics/cave_tank_walk0001.png";
 		maxHp = 3000;
 		speed = originalSpeed;
 		damage = 30;
-		attackInterval = 4.f;
+		attackInterval = 4.f;		
 		break;
 	}
 }
@@ -197,9 +233,24 @@ void Unit::OnDamage(int damage)
 	std::cout << GetName() << " 데미지: " << damage << ", 현재 체력: " << hp << std::endl;
 	if (hp == 0)	
 	{
+		PlayMoveAnimation("death");
 		SetActive(false);
 		std::cout << GetName() << "가 죽었습니다." << std::endl;
 		
 	}
 
 }
+
+//void Unit::PlayMoveAnimation(const std::string& action)
+//{
+//	std::string prefix;
+//
+//	switch (type)
+//	{
+//	case Types::melee: prefix = "melee"; break;
+//	case Types::range: prefix = "range"; break;
+//	case Types::tank:  prefix = "tank";  break;
+//	}
+//
+//	animator.Play(prefix + action);
+//}
