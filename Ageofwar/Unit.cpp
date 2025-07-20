@@ -145,7 +145,7 @@ void Unit::Update(float dt)
 			else
 			{				
 				speed = 0.f;
-				PlayMoveAnimation("idle");
+			/*	PlayMoveAnimation("idle");*/
 				if (attackTimer > attackInterval)
 				{
 					attackTimer = 0.f;
@@ -233,7 +233,7 @@ void Unit::OnDamage(int damage)
 	std::cout << GetName() << " 데미지: " << damage << ", 현재 체력: " << hp << std::endl;
 	if (hp == 0)	
 	{
-		PlayMoveAnimation("death");
+		/*PlayMoveAnimation("death");*/
 		SetActive(false);
 		std::cout << GetName() << "가 죽었습니다." << std::endl;
 		
